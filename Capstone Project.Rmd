@@ -1,0 +1,67 @@
+---
+title: "Data Science Capstone Project - Shiny"
+author: "Sang Cho"
+date: "December 31, 2017"
+output: slidy_presentation
+---
+
+```{r setup,include=FALSE,eval=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+## Background
+- Objective:  Create an application that would predict the next word given a string of input
+- Used NLP (Natural language processing) techniques to perform the analysis and build the predictive model
+- Steps (Data Processing / Cleaning Data / Create N-Gram Tables / Create Shiny App)
+
+## Data Processing and Cleaning Data
+
+- Download the input data from News/Twitter/Blogs, clean and create N-Grams
+- Creating Corpus, removing punctuations, stop words and foul words
+- refer to cleanPLUSSngram.R
+
+
+## Create N-Gram Tables
+- For bigram, trigram, and quadgram, create tables that has the most frequencies in given data
+
+```{r, echo=TRUE,messages=FALSE,eval=FALSE}
+## Building the tokenization function for the n-grams
+ngramTokenizer <- function(theCorpus, ngramCount) {
+    ngramFunction <- NGramTokenizer(theCorpus, 
+                                    Weka_control(min = ngramCount, max = ngramCount, 
+                                                 delimiters = " \\r\\n\\t.,;:\"()?!"))
+    ngramFunction <- data.frame(table(ngramFunction))
+    ngramFunction <- ngramFunction[order(ngramFunction$Freq, 
+                                         decreasing = TRUE),][1:500,]
+    colnames(ngramFunction) <- c("String","Count")
+    ngramFunction
+}
+
+unigram <- ngramTokenizer(finalCorpus, 1)
+saveRDS(unigram, file = "./unigram.RData")
+bigram <- ngramTokenizer(finalCorpus, 2)
+saveRDS(bigram, file = "./bigram.RData")
+trigram <- ngramTokenizer(finalCorpus, 3)
+saveRDS(trigram, file = "./trigram.RData")
+quadgram <- ngramTokenizer(finalCorpus, 4)
+saveRDS(quadgram, file = "./quadgram.RData")
+
+```
+
+
+## Create Shiny App
+- Text Input box where the user can enter the input text string
+
+- Predicts the next word based on the input text strong (bigram to quadgram)
+
+- Iterates from longest N-gram (6-gram) to shortest (2-gram)
+
+## Potential Improvement
+- Only sampled a portion of the entire data for this model
+- Use Naive Bayes or other techniques to predict the text not in data
+
+
+## Link to github and webapp
+-  Link to Github:  https://github.com/openended111/Capstone
+-  Link to Shiny App:  https://openended111.shinyapps.io/course10/
+
