@@ -1,0 +1,6 @@
+source("input_string.R")
+source("predict_next_term.R")
+fDF1<-readRDS("fDF1.RData")
+fDF2<-readRDS("fDF2.RData")
+fDF3<-readRDS("fDF3.RData")
+fDF4<-readRDS("fDF4.RData")
